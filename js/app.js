@@ -49,8 +49,16 @@ var Photoapp = function(config) {
   };
 
   handleDetails = function(data) {
+    var epoch = parseInt(data.photoset.date_update, 10),
+        d = new Date(0),
+        short = [];
+
+    d.setUTCSeconds(epoch);
+    short.push(d.getDate(), d.getMonth() + 1, d.getFullYear());
+
     self.viewModel.title(data.photoset.title._content);
     self.viewModel.description(data.photoset.description._content);
+    self.viewModel.date(short.join('/'));
 
     self.promise.resolve();
   };
@@ -116,6 +124,7 @@ var Photoapp = function(config) {
       title: ko.observable(),
       description: ko.observable(),
       photos: ko.observableArray([]),
+      date: ko.observable(),
       sorts: ko.observableArray(self.options.sorts),
       sortHandler: function(item, event) {
         item.sorts()[event.target.selectedIndex].sorter();
@@ -128,6 +137,10 @@ var Photoapp = function(config) {
         $(event.target).attr('contenteditable', true);
       }
     };
+
+    self.viewModel.titleAndDate = ko.computed(function() {
+      return self.viewModel.title() + " " + self.viewModel.date();
+    });
 
     ko.bindingHandlers.editableContent = {
       init: function(element, valueAccessor) {
