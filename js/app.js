@@ -88,7 +88,6 @@ var Photoapp = function(config) {
 
   titleSort = function() {
     self.viewModel.photos.sort(function(l,r) {
-      // console.log(l);
       return l.title === r.title ? 0 : l.title < r.title ? -1 : 1;
     });
   };
@@ -127,6 +126,35 @@ var Photoapp = function(config) {
       makeEditable: function(item, event) {
         self.viewModel.stopEditing();
         $(event.target).attr('contenteditable', true);
+      }
+    };
+
+    ko.bindingHandlers.editableContent = {
+      init: function(element, valueAccessor) {
+        var editable = $(element),
+            tagName = element.tagName;
+
+        editable.on('blur', function() {
+          var index,
+              text = editable.text(),
+              observable = valueAccessor();
+
+        if (tagName !== 'SPAN') {
+          // title is an observable
+          observable(text);
+        } else {
+          // figurecaption title is an normal JS element 
+          index = editable.closest('figure').index();
+          self.viewModel.photos()[index].title = text;
+        }
+
+        });
+      },
+      update: function(element, valueAccessor) {
+        var val = valueAccessor();
+        // unwrap any observable values
+        val = ko.utils.unwrapObservable(val);
+        $(element).text(val);
       }
     };
 

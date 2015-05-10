@@ -12,7 +12,7 @@
 
   <article id="photoapp", data-bind="click: stopEditing">
   
-    <header data-bind="text: title, click: makeEditable, clickBubble: false">
+    <header data-bind="editableContent: title, click: makeEditable, clickBubble: false">
     <p data-bind="text: description"></p>
     </header>
 
@@ -26,7 +26,7 @@
     <section role="main" class="photos" data-bind="foreach: photos">
       <figure>
         <img data-bind="attr: {src: url, alt: 'A picture of ' + title}" />
-        <figcaption><span data-bind="text: title, click: $root.makeEditable, clickBubble: false"></span></figcaption>
+        <figcaption><span data-bind="editableContent: title, click: $root.makeEditable, clickBubble: false"></span></figcaption>
       </figure>
     </section>
   
