@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <title>Knockout.js photoapp</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <h2>Knockout.js Photoapp</h2>
+
+  <article id="photoapp", data-bind="click: stopEditing">
+  
+    <header data-bind="text: title, click: makeEditable, clickBubble: false">
+    <p data-bind="text: description"></p>
+    </header>
+
+    <div class="controls">
+      <label for="sorts">Sort by: </label>
+      <select id="sorts" data-bind="foreach: sorts, event: { change: sortHandler }">
+        <option data-bind="text: name, value: name"></option>
+      </select>
+    </div>
+    
+    <section role="main" class="photos" data-bind="foreach: photos">
+      <figure>
+        <img data-bind="attr: {src: url, alt: 'A picture of ' + title}" />
+        <figcaption><span data-bind="text: title, click: $root.makeEditable, clickBubble: false"></span></figcaption>
+      </figure>
+    </section>
+  
+  </article>
+
+<script src="node_modules/jquery/dist/jquery.min.js"></script>
+<script src="node_modules/knockout/build/output/knockout-latest.js"></script>
+<script src="js/app.js"></script>
+<script>
+  var myphotoapp = new Photoapp({
+    apiKey: 'd06f09052e7c8c26e2523d787af7c3a4',
+    photosetId: '72157637982221106',
+    userId: '22179911@N08',
+  });
+</script>
+</body>
+</html>
