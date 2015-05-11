@@ -82,6 +82,7 @@ var Photoapp = function(config) {
     }
 
     self.viewModel.photos(models);
+    self.viewModel.originalLength = models.length;
   };
 
   getImageUrl = function(photo) {
@@ -125,21 +126,62 @@ var Photoapp = function(config) {
       description: ko.observable(),
       photos: ko.observableArray([]),
       date: ko.observable(),
+      showButton: ko.observable(false),
+      filterTerm: ko.observable(),
+      originalPhotos: null,
+      originalLength: 0,
       sorts: ko.observableArray(self.options.sorts),
       sortHandler: function(item, event) {
         item.sorts()[event.target.selectedIndex].sorter();
       },
       stopEditing: function() {
         $('[contentEditable]').removeAttr('contenteditable');
+        self.viewModel.showButton(false);        
       },
       makeEditable: function(item, event) {
         self.viewModel.stopEditing();
         $(event.target).attr('contenteditable', true);
+      },
+      serialise: function() {
+        var data = ko.toJS(self.viewModel);
+
+        delete data.showButton;
+        delete data.sorts;
+        delete data.titleAndDate;
+
+        data = JSON.stringify(data);
+        // this could be extended to send the JSON data back to the server.
       }
     };
 
     self.viewModel.titleAndDate = ko.computed(function() {
       return self.viewModel.title() + " " + self.viewModel.date();
+    });
+
+    self.viewModel.filter = ko.computed(function() {
+      var x,
+          y = self.viewModel.photos().length,
+          results = [],
+          vm = self.viewModel,
+          term = vm.filterTerm();
+
+          // find filter term matches
+          if(term !== undefined && term !== '') {
+            
+            for (x = 0; x < y; x++) {
+              var lowerCaseTitle = vm.photos()[x].title.toLowerCase();
+              if (lowerCaseTitle.indexOf(term.toLowerCase()) !== -1 ) {
+                results.push(vm.photos()[x]);
+              }
+            }
+            if (vm.photos().length === vm.originalLength) {
+              vm.originalPhotos = vm.photos();
+            }
+            vm.photos(results);
+          } else if (term === '') {
+            // Reset the list
+            vm.photos(vm.originalPhotos);
+          }
     });
 
     ko.bindingHandlers.editableContent = {
@@ -152,14 +194,16 @@ var Photoapp = function(config) {
               text = editable.text(),
               observable = valueAccessor();
 
-        if (tagName !== 'SPAN') {
-          // title is an observable
-          observable(text);
-        } else {
-          // figurecaption title is an normal JS element 
-          index = editable.closest('figure').index();
-          self.viewModel.photos()[index].title = text;
-        }
+          if (tagName !== 'SPAN') {
+            // title is an observable
+            observable(text);
+          } else {
+            // figurecaption title is an normal JS element 
+            index = editable.closest('figure').index();
+            self.viewModel.photos()[index].title = text;
+          }
+
+          self.viewModel.showButton(true);        
 
         });
       },
@@ -168,6 +212,7 @@ var Photoapp = function(config) {
         // unwrap any observable values
         val = ko.utils.unwrapObservable(val);
         $(element).text(val);
+        
       }
     };
 

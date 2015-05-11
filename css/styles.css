@@ -15,7 +15,9 @@ section {
 img {
   margin-top: 1.2em;
 }
-
+button.save {
+  margin-left: 0.8em;
+}
 @media screen and (max-width: 579px) { 
   img {
     width: 100%;
