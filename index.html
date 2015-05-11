@@ -27,11 +27,20 @@
     
     <section role="main" class="photos" data-bind="foreach: photos">
       <figure>
-        <img data-bind="attr: {src: url, alt: 'A picture of ' + title}" />
+        <img data-bind="attr: {src: url, alt: 'A picture of ' + title}, click: $root.showLightbox" />
         <figcaption><span data-bind="editableContent: title, click: $root.makeEditable, clickBubble: false"></span><button class="save" data-bind="visible: $root.showButton, event: {click: $root.serialise}">Save</button></figcaption>
         
       </figure>
     </section>
+
+    <!-- ko if: lightboxVisible -->
+    <div class="modal">
+      <div class="lightbox">
+        <a href="#" title="Close" data-bind="click: closeLightbox, clickBubble: false">x</a>
+        <img data-bind="attr: { src: lightbox.url, alt: lightbox.title}" />
+      </div>
+    </div>
+    <!-- /ko -->
   
   </article>
 

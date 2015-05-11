@@ -127,6 +127,11 @@ var Photoapp = function(config) {
       photos: ko.observableArray([]),
       date: ko.observable(),
       showButton: ko.observable(false),
+      lightboxVisible: ko.observable(false), 
+      lightbox: {
+        title: null,
+        url: null,
+      },
       filterTerm: ko.observable(),
       originalPhotos: null,
       originalLength: 0,
@@ -151,7 +156,17 @@ var Photoapp = function(config) {
 
         data = JSON.stringify(data);
         // this could be extended to send the JSON data back to the server.
-      }
+      },
+      showLightbox: function(photo) {
+        self.viewModel.lightbox.url = photo.url.replace(/_d/, '_b');
+        self.viewModel.lightbox.title = photo.title;
+        self.viewModel.lightboxVisible(true);
+      },
+      closeLightbox: function() {
+        self.viewModel.lightbox.url = null;
+        self.viewModel.lightbox.title = null;
+        self.viewModel.lightboxVisible(false);
+      },
     };
 
     self.viewModel.titleAndDate = ko.computed(function() {

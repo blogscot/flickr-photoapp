@@ -18,6 +18,44 @@ img {
 button.save {
   margin-left: 0.8em;
 }
+#photoapp .modal { 
+  width: 80%;
+  height: 80%;
+  position: absolute;
+  top: 0; left: 0; 
+  /*background-color: rgba(0,0,0,.5);*/
+  z-index: 100; 
+}
+#photoapp .lightbox { 
+ margin-left: -50%;
+ margin-top: -288px;
+ position: absolute;
+ top: 60%;
+ left: 60%;
+ /*box-shadow: rgba(0,0,0,.5) 4px 4px 10px;*/
+ border: 3px solid #3B3C44;
+ z-index: 101;
+}
+#photoapp .lightbox img {
+  margin-top: 0;
+  display: block;
+}
+#photoapp .lightbox a { 
+  width: 30px;
+  border-radius: 100px;
+  position: absolute;
+  top: -17px;
+  right: -14px;
+  background-color: #000;
+  color: #fff;
+  font-weight: bold;
+  font-family: sans-serif;
+  font-size: 20px;
+  line-height: 29px;
+  text-align: center;
+  text-decoration: none;
+}
+
 @media screen and (max-width: 579px) { 
   img {
     width: 100%;
